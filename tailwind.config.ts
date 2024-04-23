@@ -21,6 +21,10 @@ const config: Config = {
           300: "#B3B3B3",
         },
       },
+      fontFamily: {
+        default: ["var(--font-poppins)"],
+        poppins: ["var(--font-poppins)"],
+      },
     },
   },
   darkMode: "class",

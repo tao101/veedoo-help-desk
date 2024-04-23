@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { Providers } from "./providers";
 import { poppinsFont } from "@/src/utils/fonts";
-
-const inter = Inter({ subsets: ["latin"] });
 
 //TODO: add default SEO metadata
 export const metadata: Metadata = {
@@ -21,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-screen min-h-screen flex flex-col ${poppinsFont.className} `}
+        className={`w-screen min-h-screen flex flex-col ${poppinsFont.variable} `}
       >
         <Providers>{children}</Providers>
       </body>
