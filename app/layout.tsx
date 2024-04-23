@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { Providers } from "./providers";
 import { poppinsFont } from "@/src/utils/fonts";
+import { Toaster } from "react-hot-toast";
 
 //TODO: add default SEO metadata
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body
         className={`w-screen min-h-screen flex flex-col ${poppinsFont.variable} `}
       >
+        <Toaster position="bottom-center" />
         <Providers>{children}</Providers>
       </body>
     </html>
