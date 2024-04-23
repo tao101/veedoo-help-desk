@@ -18,11 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`w-screen min-h-screen flex flex-col ${poppinsFont.variable} `}
-      >
+      <body className={` bg-white ${poppinsFont.variable} `}>
         <Toaster position="bottom-center" />
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="w-screen min-h-screen flex flex-col bg-white">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
