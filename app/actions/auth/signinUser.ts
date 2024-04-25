@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { lucia } from "@/src/services/auth";
 import { redirect } from "next/navigation";
+import CreatePasswordPage from "@/app/(pages)/(privatePages)/create-passowrd/page";
+import { DEFAULT_ACCOUNT_PASSWORD } from "@/src/utils/consts";
 
 export async function signinUserAction(signinUser: object) {
   try {
@@ -33,24 +35,35 @@ export async function signinUserAction(signinUser: object) {
     const existingUser = await db.query.users.findFirst({
       where: eq(users.email, email),
     });
+    console.log("existingUser", existingUser);
 
-    if (!existingUser || !existingUser.hashed_password) {
+    if (!existingUser) {
       return {
         status: false,
-        message: "Incorrect username or password",
+        message: "Sorry, we don’t recognize this email address.",
       };
     }
+    if (existingUser.hashed_password && existingUser.hashed_password != "") {
+      const validPassword = await new Argon2id().verify(
+        existingUser.hashed_password,
+        password
+      );
 
-    const validPassword = await new Argon2id().verify(
-      existingUser.hashed_password,
-      password
-    );
-
-    if (!validPassword) {
-      return {
-        status: false,
-        message: "Incorrect username or password",
-      };
+      if (!validPassword) {
+        return {
+          status: false,
+          message: "Incorrect username or password",
+        };
+      }
+    } else {
+      if (password != DEFAULT_ACCOUNT_PASSWORD) {
+        return {
+          status: false,
+          message:
+            "Incorrect Default Password for this account.Please contact Veedoo to get the password.",
+          createPassword: true,
+        };
+      }
     }
 
     const session = await lucia.createSession(existingUser.id, {});
@@ -61,8 +74,12 @@ export async function signinUserAction(signinUser: object) {
       sessionCookie.value,
       sessionCookie.attributes
     );
-
-    return redirect("/");
+    return {
+      status: true,
+      message: "User signed in",
+      createPassword:
+        !existingUser.hashed_password || existingUser.hashed_password == "",
+    };
   } catch (error: any) {
     console.error("error in signupUser ", error);
     return {

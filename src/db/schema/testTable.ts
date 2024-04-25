@@ -24,3 +24,6 @@ export const testTable = pgTable(
     };
   }
 );
+
+export type TestTable = typeof testTable.$inferSelect;
+export type TestTableInsert = typeof testTable.$inferInsert;

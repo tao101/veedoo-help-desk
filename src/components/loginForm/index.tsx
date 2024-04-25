@@ -8,6 +8,10 @@ import { validateEmail, validatePassword } from "@/src/utils/validators";
 import CloseSvg from "@/src/svgs/closeSvg";
 import TickSvg from "@/src/svgs/tickSvg";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { signinUserAction } from "@/app/actions/auth/signinUser";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm({
   createPassword = false,
@@ -22,25 +26,74 @@ export default function LoginForm({
     emailMessage: string;
     password: boolean;
     passwordMessage: string;
+    loginError: string;
   }>({
     email: true,
     emailMessage: "sadasdadasd",
     password: false,
     passwordMessage: "",
+    loginError: "",
   });
 
   let isPasswordValidObj = validatePassword(password);
+  const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const onFromSubmit = (e: any) => {
+  const onFromSubmit = async (e: any) => {
+    console.log("onFromSubmit", email, password);
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setFormError({
-        ...fromError,
+    setFormError((prev) => ({ ...prev, email: false, loginError: "" }));
+
+    if (!validateEmail(email) || !isPasswordValidObj.isPasswordValid) {
+      console.log("onFromSubmit", {
         email: !validateEmail(email),
         emailMessage: "Please enter a valid email",
+        password: !isPasswordValidObj.isPasswordValid,
+        passwordMessage: "Password is not valid",
       });
+
+      setFormError({
+        email: !validateEmail(email),
+        emailMessage: "Please enter a valid email",
+        password: !isPasswordValidObj.isPasswordValid,
+        passwordMessage: "Password is not valid",
+        loginError: "",
+      });
+
+      return;
+    }
+
+    try {
+      console.log("test");
+      let data = {
+        email,
+        password,
+      };
+      let request = await signinUserAction(data);
+      let { status, message, createPassword } = request;
+      console.log("request ", request);
+      if (!status) {
+        toast.error(message);
+        console.error(message);
+        setFormError((prev) => ({
+          ...prev,
+          email: false,
+          loginError: message,
+        }));
+
+        return;
+      } else {
+        toast.success("Login successfull");
+        if (createPassword) {
+          router.push("/create-passowrd");
+        } else {
+          router.push("/");
+        }
+      }
+    } catch (error: any) {
+      toast.error("Something went wrong: " + error.message);
+      console.error("error", error.message);
     }
   };
 
@@ -153,7 +206,16 @@ export default function LoginForm({
         </div>
       )}
 
-      <Button className="mt-2.5 bg-primary-700 text-white text-[16px] font-semibold  ">
+      {fromError.loginError != "" && (
+        <p className=" text-error-900 text-center py-2.5 text-[12px]">
+          {fromError.loginError}
+        </p>
+      )}
+
+      <Button
+        type="submit"
+        className="mt-2.5 bg-primary-700 text-white text-[16px] font-semibold  "
+      >
         Login
       </Button>
     </form>

@@ -13,3 +13,6 @@ export const companies = pgTable(
     };
   }
 );
+
+export type Company = typeof companies.$inferSelect;
+export type CompanyInsert = typeof companies.$inferInsert;

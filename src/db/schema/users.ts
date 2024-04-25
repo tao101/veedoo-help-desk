@@ -1,6 +1,4 @@
 import { pgTable, primaryKey, text, uniqueIndex } from "drizzle-orm/pg-core";
-import { companies } from "./companies";
-import { user } from "@nextui-org/react";
 
 export const users = pgTable(
   "users",
@@ -21,3 +19,6 @@ export const users = pgTable(
     };
   }
 );
+
+export type User = typeof users.$inferSelect;
+export type UserInsert = typeof users.$inferInsert;

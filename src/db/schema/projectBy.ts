@@ -8,10 +8,10 @@ export const projectBy = pgTable(
   {
     companyId: text("company_id")
       .notNull()
-      .references(() => companies.id),
+      .references(() => companies.id, { onDelete: "cascade" }),
     projectId: text("project_id")
       .notNull()
-      .references(() => projects.id),
+      .references(() => projects.id, { onDelete: "cascade" }),
   },
   (table) => {
     return {
@@ -21,3 +21,6 @@ export const projectBy = pgTable(
     };
   }
 );
+
+export type ProjectBy = typeof projectBy.$inferSelect;
+export type ProjectByInsert = typeof projectBy.$inferInsert;
