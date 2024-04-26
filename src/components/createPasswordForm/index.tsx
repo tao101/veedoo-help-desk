@@ -13,10 +13,12 @@ import { signinUserAction } from "@/app/actions/auth/signinUser";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 
-export default function LoginForm({
-  createPassword = false,
+export default function CreatePasswordForm({
+  userId,
+  userEmail,
 }: {
-  createPassword?: boolean;
+  userId: string;
+  userEmail: string;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,7 +120,7 @@ export default function LoginForm({
         required
       />
       <Input
-        label={createPassword ? "Create Password" : "Password"}
+        label={"Create Password"}
         variant="bordered"
         placeholder="Enter your password"
         endContent={
@@ -188,17 +190,6 @@ export default function LoginForm({
               Contains a number.
             </p>
           </div>
-        </div>
-      )}
-
-      {!createPassword && (
-        <div className=" w-full  flex flex-col items-end flex-end">
-          <Link
-            className=" text-[13px] text-primary-700 active:scale-90 "
-            href="/forgot-passowrd"
-          >
-            Forgot password?
-          </Link>
         </div>
       )}
 

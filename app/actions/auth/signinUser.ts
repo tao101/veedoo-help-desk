@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { lucia } from "@/src/services/auth";
 import { redirect } from "next/navigation";
-import CreatePasswordPage from "@/app/(pages)/(privatePages)/create-passowrd/page";
 import { DEFAULT_ACCOUNT_PASSWORD } from "@/src/utils/consts";
 
 export async function signinUserAction(signinUser: object) {
@@ -37,33 +36,27 @@ export async function signinUserAction(signinUser: object) {
     });
     console.log("existingUser", existingUser);
 
-    if (!existingUser) {
+    if (
+      !existingUser ||
+      !existingUser.hashed_password ||
+      existingUser.hashed_password == ""
+    ) {
       return {
         status: false,
         message: "Sorry, we don’t recognize this email address.",
       };
     }
-    if (existingUser.hashed_password && existingUser.hashed_password != "") {
-      const validPassword = await new Argon2id().verify(
-        existingUser.hashed_password,
-        password
-      );
 
-      if (!validPassword) {
-        return {
-          status: false,
-          message: "Incorrect username or password",
-        };
-      }
-    } else {
-      if (password != DEFAULT_ACCOUNT_PASSWORD) {
-        return {
-          status: false,
-          message:
-            "Incorrect Default Password for this account.Please contact Veedoo to get the password.",
-          createPassword: true,
-        };
-      }
+    const validPassword = await new Argon2id().verify(
+      existingUser.hashed_password,
+      password
+    );
+
+    if (!validPassword) {
+      return {
+        status: false,
+        message: "Incorrect username or password",
+      };
     }
 
     const session = await lucia.createSession(existingUser.id, {});
@@ -77,8 +70,6 @@ export async function signinUserAction(signinUser: object) {
     return {
       status: true,
       message: "User signed in",
-      createPassword:
-        !existingUser.hashed_password || existingUser.hashed_password == "",
     };
   } catch (error: any) {
     console.error("error in signupUser ", error);
