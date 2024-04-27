@@ -7,8 +7,6 @@ import { Argon2id } from "oslo/password";
 import { cookies } from "next/headers";
 import { eq } from "drizzle-orm";
 import { lucia } from "@/src/services/auth";
-import { redirect } from "next/navigation";
-import { DEFAULT_ACCOUNT_PASSWORD } from "@/src/utils/consts";
 
 export async function signinUserAction(signinUser: object) {
   try {

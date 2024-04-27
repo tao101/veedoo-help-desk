@@ -10,8 +10,6 @@ if (!FIBERY_SPACE) {
   throw new Error("FIBERY_SPACE is not set");
 }
 
-export const DEFAULT_ACCOUNT_PASSWORD = "WeLoveVeedoo123";
-
 export const USER_ID_LENGTH = 15;
 
 export const FIBERY_GRAPHQL_URL = `https://${FIBERY_ACCOUNT}.fibery.io/api/graphql/space/${FIBERY_SPACE}`;

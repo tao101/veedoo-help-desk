@@ -9,9 +9,11 @@ import { addOrUpdateCompany } from "@/src/db/utils/companyUtils";
 import { addOrUpdateContact } from "@/src/db/utils/contactUtils";
 import { addOrUpdateProject } from "@/src/db/utils/projectUtils";
 import { FIBERY_CRM_API_URL } from "@/src/utils/consts";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    console.log("invite-contact");
     let fiberyToken = process.env.FIBERY_TOKEN;
 
     if (!fiberyToken) {
@@ -165,7 +167,10 @@ export async function POST(request: Request) {
               },
               To: [
                 {
-                  Email: process.env.NODE_ENV == 'production' ? contact.email :  "taoufiq@veedoo.io" ,
+                  Email:
+                    process.env.NODE_ENV == "production"
+                      ? contact.email
+                      : "taoufiq@veedoo.io",
                   Name: contact.name,
                 },
               ],
@@ -208,3 +213,43 @@ export async function POST(request: Request) {
     });
   }
 }
+
+export const OPTIONS = async (request: NextRequest) => {
+  // Return Response
+  return NextResponse.json(
+    {},
+    {
+      status: 200,
+      headers: getCorsHeaders(request.headers.get("origin") || ""),
+    }
+  );
+};
+
+const getCorsHeaders = (origin: string) => {
+  // Default options
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Origin": `[${process.env.NEXT_PUBLIC_BASE_URL},'https://veedoo.fibery.io','https://fibery.io']`,
+  };
+
+  // If no allowed origin is set to default server origin
+  if (!process.env.NEXT_PUBLIC_BASE_URL || !origin) return headers;
+
+  // If allowed origin is set, check if origin is in allowed origins
+  const allowedOrigins = [
+    process.env.NEXT_PUBLIC_BASE_URL,
+    "https://veedoo.fibery.io",
+    "https://fibery.io",
+  ];
+
+  // Validate server origin
+  if (allowedOrigins.includes("*")) {
+    headers["Access-Control-Allow-Origin"] = "*";
+  } else if (allowedOrigins.includes(origin)) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  }
+
+  // Return result
+  return headers;
+};
