@@ -188,22 +188,18 @@ export async function POST(request: Request) {
             },
           ],
         });
-        request
-          .then((result: any) => {
-            //console.log(result.body);
-          })
-          .catch((err: any) => {
-            console.log(
-              "error sending email in invite-contact ",
-              err.statusCode
-            );
-          });
+        let email = await request.catch((err: any) => {
+          console.log("error sending email in invite-contact ", err.statusCode);
+        });
+
+        console.log("emailResult", email.body);
         await Promise.all(relations);
       }
     }
 
     return Response.json({
       status: true,
+      message: "Contacts invited successfully ",
     });
   } catch (e: any) {
     console.error("error in invite contact ", e);
