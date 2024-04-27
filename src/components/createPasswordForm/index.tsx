@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Spinner } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { EyeFilledIcon } from "../loginForm/eyeFilledIcon";
 import { EyeSlashFilledIcon } from "../loginForm/eyeSlashFilledIcon";
@@ -12,16 +12,12 @@ import toast from "react-hot-toast";
 import { signinUserAction } from "@/app/actions/auth/signinUser";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { createPasswordById } from "@/app/actions/auth/createPasswordById";
 
-export default function LoginForm({
-  createPassword = false,
-}: {
-  createPassword?: boolean;
-}) {
+export default function CreatePasswordForm({ userId }: { userId: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [fromError, setFormError] = useState<{
     email: boolean;
     emailMessage: string;
@@ -66,12 +62,13 @@ export default function LoginForm({
     }
 
     try {
-      setLoading(true);
+      console.log("test");
       let data = {
+        id: userId,
         email,
         password,
       };
-      let request = await signinUserAction(data);
+      let request = await createPasswordById(data);
       let { status, message } = request;
       console.log("request ", request);
       if (!status) {
@@ -91,8 +88,6 @@ export default function LoginForm({
     } catch (error: any) {
       toast.error("Something went wrong: " + error.message);
       console.error("error", error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -121,7 +116,7 @@ export default function LoginForm({
         required
       />
       <Input
-        label={createPassword ? "Create Password" : "Password"}
+        label={"Create Password"}
         variant="bordered"
         placeholder="Enter your password"
         endContent={
@@ -194,17 +189,6 @@ export default function LoginForm({
         </div>
       )}
 
-      {!createPassword && (
-        <div className=" w-full  flex flex-col items-end flex-end">
-          <Link
-            className=" text-[13px] text-primary-700 active:scale-90 "
-            href="/forgot-passowrd"
-          >
-            Forgot password?
-          </Link>
-        </div>
-      )}
-
       {fromError.loginError != "" && (
         <p className=" text-error-900 text-center py-2.5 text-[12px]">
           {fromError.loginError}
@@ -215,8 +199,7 @@ export default function LoginForm({
         type="submit"
         className="mt-2.5 bg-primary-700 text-white text-[16px] font-semibold  "
       >
-        {!loading && "Login"}
-        {loading && <Spinner />}
+        Login
       </Button>
     </form>
   );
