@@ -1,4 +1,4 @@
-import { index, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, serial, text } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { projects } from "./projects";
 

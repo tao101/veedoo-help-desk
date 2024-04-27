@@ -138,7 +138,9 @@ export async function POST(request: Request) {
               companyId: company?.id,
               userId: contact.id,
             };
-            relations.push(db.insert(worksForTable).values(newRelation));
+            relations.push(
+              db.insert(worksForTable).values(newRelation).onConflictDoNothing()
+            );
           }
         });
         console.log("contactProjects", contactProjects);
@@ -149,7 +151,9 @@ export async function POST(request: Request) {
               userId: contact.id,
             };
 
-            relations.push(db.insert(projectFor).values(newRelation));
+            relations.push(
+              db.insert(projectFor).values(newRelation).onConflictDoNothing()
+            );
           }
         });
         const Mailjet = require("node-mailjet");
