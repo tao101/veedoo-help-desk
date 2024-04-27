@@ -47,7 +47,7 @@ export async function signupUserAction(signupUser: object) {
       sessionCookie.value,
       sessionCookie.attributes
     );
-    return redirect("/tasks");
+    return redirect("/");
   } catch (error: any) {
     console.error("error in signupUser ", error);
     return {

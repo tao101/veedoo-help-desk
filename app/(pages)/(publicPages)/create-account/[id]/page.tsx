@@ -35,13 +35,13 @@ export default async function CreateAccountPage({
 
   return (
     <main className="flex-1 flex flex-col items-center justify-center ">
-      <div className="flex flex-col gap-2 items-center w-[300px]">
+      <div className="flex flex-col gap-2 items-center w-[325px]">
         <h1 className=" text-neutral-700 text-[40px] font-semibold">Welcome</h1>
         <p className="text-[16px] text-netural-700 ">
           This is your first time logging in. Please create a password to
           continue.
         </p>
-        <CreatePasswordForm userId={id} userEmail={email} />
+        <CreatePasswordForm userId={id} />
       </div>
     </main>
   );

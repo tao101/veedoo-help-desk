@@ -160,13 +160,13 @@ export async function POST(request: Request) {
           Messages: [
             {
               From: {
-                Email: "alona.lashchenko@ukraineshelter.com",
-                Name: "Everyrun",
+                Email: "support@veedoo.io",
+                Name: "Veedoo Support",
               },
               To: [
                 {
-                  Email: "passenger1@example.com",
-                  Name: "passenger 1",
+                  Email: process.env.NODE_ENV == 'production' ? contact.email :  "taoufiq@veedoo.io" ,
+                  Name: contact.name,
                 },
               ],
               TemplateID: 5917862,

@@ -11,6 +11,7 @@ export const users = pgTable(
     lastName: text("last_name"),
     state: text("state"),
     phone: text("phone"),
+    tmpResetPasswordToken: text("tmp_reset_password_token"),
   },
   (table) => {
     return {

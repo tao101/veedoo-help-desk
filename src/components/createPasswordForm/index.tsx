@@ -12,14 +12,9 @@ import toast from "react-hot-toast";
 import { signinUserAction } from "@/app/actions/auth/signinUser";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { createPasswordById } from "@/app/actions/auth/createPasswordById";
 
-export default function CreatePasswordForm({
-  userId,
-  userEmail,
-}: {
-  userId: string;
-  userEmail: string;
-}) {
+export default function CreatePasswordForm({ userId }: { userId: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
@@ -69,10 +64,11 @@ export default function CreatePasswordForm({
     try {
       console.log("test");
       let data = {
+        id: userId,
         email,
         password,
       };
-      let request = await signinUserAction(data);
+      let request = await createPasswordById(data);
       let { status, message } = request;
       console.log("request ", request);
       if (!status) {

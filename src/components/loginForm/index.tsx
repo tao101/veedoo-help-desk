@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import { useState } from "react";
 import { EyeFilledIcon } from "../loginForm/eyeFilledIcon";
 import { EyeSlashFilledIcon } from "../loginForm/eyeSlashFilledIcon";
@@ -21,6 +21,7 @@ export default function LoginForm({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [fromError, setFormError] = useState<{
     email: boolean;
     emailMessage: string;
@@ -65,7 +66,7 @@ export default function LoginForm({
     }
 
     try {
-      console.log("test");
+      setLoading(true);
       let data = {
         email,
         password,
@@ -90,6 +91,8 @@ export default function LoginForm({
     } catch (error: any) {
       toast.error("Something went wrong: " + error.message);
       console.error("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -212,7 +215,8 @@ export default function LoginForm({
         type="submit"
         className="mt-2.5 bg-primary-700 text-white text-[16px] font-semibold  "
       >
-        Login
+        {!loading && "Login"}
+        {loading && <Spinner />}
       </Button>
     </form>
   );

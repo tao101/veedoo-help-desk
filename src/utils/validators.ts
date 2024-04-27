@@ -17,6 +17,37 @@ export function validateEmail(email: string) {
   //check if email is valid and return the result
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+export const createPasswordByIdSchema = z.object({
+  id: z.string({
+    required_error: "ID is required",
+    invalid_type_error: "ID must be a string",
+  }),
+  email: z
+    .string({
+      required_error: "Email is required",
+      invalid_type_error: "Email must be a string",
+    })
+    .trim()
+    .email({
+      message: "Invalid email address",
+    }),
+  password: z
+    .string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    })
+    .trim()
+    .refine(
+      (password) => {
+        const { isPasswordValid } = validatePassword(password);
+        return isPasswordValid;
+      },
+      {
+        message:
+          "Password must be at least 12 characters long and contain at least one uppercase letter and one number",
+      }
+    ), // validatePassword(password).isPasswordValid),
+});
 
 export const signupUserSchema = z.object({
   email: z
