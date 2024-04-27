@@ -206,7 +206,7 @@ export async function POST(request: Request) {
       status: true,
     });
   } catch (e: any) {
-    console.error(e);
+    console.error("error in invite contact ", e);
     return Response.json({
       status: false,
       message: e.message,
